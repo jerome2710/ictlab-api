@@ -27,7 +27,7 @@ var User   = require('./models/user');
 // =======================
 // configuration =========
 // =======================
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 3000;
 mongoose.connect(config.mongodb.database); // connect to database
 app.set('superSecret', config.secret); // secret variable
 
