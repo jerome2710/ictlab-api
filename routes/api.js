@@ -47,7 +47,7 @@ router.use(function(req, res, next) {
     if (token) {
 
         // verifies secret and checks exp
-        jwt.verify(token, app.get('superSecret'), function(err, decoded) {
+        jwt.verify(token, config.secret, function(err, decoded) {
             if (err) {
                 return res.json({
                     status: 'error',
