@@ -71,6 +71,14 @@ app.get('/', function(req, res) {
 // API ROUTES -------------------
 app.use('/api', apiRoutes);
 
+// 404 ROUTE -------------------
+app.all('*', function(req, res) {
+    res.status(404).json({
+        status: 'error',
+        message: 'Route not found'
+    });
+});
+
 // =======================
 // start the server ======
 // =======================
