@@ -21,7 +21,7 @@ var bodyParser  = require('body-parser');
 var morgan      = require('morgan');
 var mongoose    = require('mongoose');
 
-var apiRoutes   = require('./routes/api');
+var authRoutes   = require('./routes/authentication');
 
 // =======================
 // configuration =========
@@ -39,37 +39,9 @@ app.use(morgan('dev'));
 // =======================
 // routes ================
 // =======================
-app.get('/', function(req, res) {
-    res.json({
-        success: 'success',
-        data: {}
-    })
-});
-
-// app.get('/setup', function(req, res) {
-//
-//     // create a sample user
-//     var admin = new User({
-//         name: 'admin',
-//         password: 'admin',
-//         admin: true
-//     });
-//
-//     // save the sample user
-//     admin.save(function(err) {
-//         if (err) throw err;
-//
-//         console.log('User saved successfully');
-//         res.json({
-//             success: 'success',
-//             data: {}
-//         });
-//     });
-// });
-
 
 // API ROUTES -------------------
-app.use('/api', apiRoutes);
+app.use('/', authRoutes);
 
 // 404 ROUTE -------------------
 app.all('*', function(req, res) {
