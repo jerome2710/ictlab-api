@@ -10,8 +10,9 @@ router.get('/list', function(req, res) {
             {$sort: {'timestamp': -1}},
             {
                 $group: {
-                    '_id': '$uuid',
+                    'uuid': '$uuid',
                     'battery': { '$first': '$battery' },
+                    'location': { '$first': 'location' },
                     'timestamp': { '$first': '$timestamp' }
                 }
             }
