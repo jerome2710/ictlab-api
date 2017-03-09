@@ -21,6 +21,7 @@ var bodyParser  = require('body-parser');
 var morgan      = require('morgan');
 var mongoose    = require('mongoose');
 
+var debugRoutes   = require('./routes/debug');
 var authRoutes   = require('./routes/authentication');
 var sensorRoutes = require('./routes/sensors');
 
@@ -38,6 +39,9 @@ app.use(morgan('dev'));
 // ==============================================
 // routes =======================================
 // ==============================================
+
+// DEBUG ROUTES -----------------
+app.use('/debug', debugRoutes);
 
 // API ROUTES -------------------
 app.use('/', authRoutes);
