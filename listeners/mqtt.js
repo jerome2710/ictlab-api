@@ -11,8 +11,21 @@ module.exports = function(client) {
     // process reading
     client.on('message', function (topic, message) {
 
-        var reading = new Reading();
+        for (var index = 0; index < message.readings.length; ++index) {
+            var reading = new Reading({
+                uuid: message.uuid,
+                location: message.location,
+                type: message.readings[index].type,
+                reading: message.readings[index].reading,
+                unit: message.readings[index].unit,
+                timestamp: message.readings[index].timestamp,
+                battery: message.battery
+            });
+            reading.save(function (err) {
+                if (err) throw err;
+            });
+        }
 
-        console.log(message.toString());
+        console.log('Readings saved');
     });
 };
