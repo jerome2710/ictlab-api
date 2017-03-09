@@ -22,26 +22,28 @@ var morgan      = require('morgan');
 var mongoose    = require('mongoose');
 
 var authRoutes   = require('./routes/authentication');
+var sensorRoutes = require('./routes/sensors');
 
-// =======================
-// configuration =========
-// =======================
+// ==============================================
+// configuration ================================
+// ==============================================
 var port = process.env.PORT || 3000;
-mongoose.connect(config.mongodb.database); // connect to database
+// mongoose.connect(config.mongodb.database);
 
-// use body parser so we can get info from POST and/or URL parameters
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// use morgan to log requests to the console
 app.use(morgan('dev'));
 
-// =======================
-// routes ================
-// =======================
+// ==============================================
+// routes =======================================
+// ==============================================
 
 // API ROUTES -------------------
 app.use('/', authRoutes);
+
+// SENSOR ROUTES ---------------
+app.use('/sensors', sensorRoutes);
 
 // 404 ROUTE -------------------
 app.all('*', function(req, res) {
@@ -51,8 +53,8 @@ app.all('*', function(req, res) {
     });
 });
 
-// =======================
-// start the server ======
-// =======================
+// ==============================================
+// start the server =============================
+// ==============================================
 app.listen(port);
 console.log('API started listening');
