@@ -1,4 +1,5 @@
 // routes/api.js
+var config      = require('./../config');
 var express     = require('express');
 var router      = express.Router();
 var jwt         = require('jsonwebtoken');
@@ -22,7 +23,7 @@ router.post('/authenticate', function(req, res) {
         } else if (user) {
 
             // create a token
-            var token = jwt.sign(user, app.get('superSecret'), {
+            var token = jwt.sign(user, config.secret, {
                 expiresInMinutes: 1440 // expires in 24 hours
             });
 

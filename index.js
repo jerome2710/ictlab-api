@@ -28,7 +28,6 @@ var apiRoutes   = require('./routes/api');
 // =======================
 var port = process.env.PORT || 3000;
 mongoose.connect(config.mongodb.database); // connect to database
-app.set('superSecret', config.secret); // secret variable
 
 // use body parser so we can get info from POST and/or URL parameters
 app.use(bodyParser.urlencoded({ extended: false }));
