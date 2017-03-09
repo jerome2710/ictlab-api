@@ -11,6 +11,8 @@ module.exports = function(client) {
     // process reading
     client.on('message', function (topic, message) {
 
+        message = JSON.parse(message);
+
         for (var index = 0; index < message.readings.length; ++index) {
             var reading = new Reading({
                 uuid: message.uuid,
