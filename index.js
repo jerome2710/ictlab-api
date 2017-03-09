@@ -28,7 +28,7 @@ var sensorRoutes = require('./routes/sensors');
 // configuration ================================
 // ==============================================
 var port = process.env.PORT || 3000;
-// mongoose.connect(config.mongodb.database);
+mongoose.connect(config.mongodb.database);
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());

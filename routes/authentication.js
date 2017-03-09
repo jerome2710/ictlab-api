@@ -16,7 +16,7 @@ router.post('/authenticate', function(req, res) {
         if (err) throw err;
 
         if (!user || (user.password != req.body.password)) {
-            res.json({
+            res.status(403).json({
                 status: 'error',
                 message: 'Authentication failed; invalid credentials.'
             });
@@ -49,7 +49,7 @@ router.use(function(req, res, next) {
         // verifies secret and checks exp
         jwt.verify(token, config.secret, function(err, decoded) {
             if (err) {
-                return res.json({
+                return res.status(403).json({
                     status: 'error',
                     message: 'Authentication failed; token verification failed.'
                 });
