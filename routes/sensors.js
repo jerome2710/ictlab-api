@@ -12,7 +12,7 @@ router.get('/list', function(req, res) {
                 $group: {
                     '_id': '$uuid',
                     'battery': { '$first': '$battery' },
-                    'location': { '$first': 'location' },
+                    'location': { '$first': '$location' },
                     'timestamp': { '$first': '$timestamp' }
                 }
             }
