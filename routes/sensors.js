@@ -16,14 +16,16 @@ router.get('/', function(req, res) {
                     'timestamp': { '$first': '$timestamp' }
                 }
             }
-        ], function (err, sensors) {
-        res.json({
-            status: 'success',
-            data: {
-                sensors: sensors
-            }
-        })
-    });
+        ],
+        function (err, data) {
+            res.json({
+                status: 'success',
+                data: {
+                    sensors: data
+                }
+            })
+        }
+    );
 });
 
 module.exports = router;
