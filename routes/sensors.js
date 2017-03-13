@@ -3,8 +3,8 @@ var express     = require('express');
 var router      = express.Router();
 var Reading     = require('./../models/reading');
 
-// route to return all latest readings (GET http://localhost:3000/sensors/list)
-router.get('/list', function(req, res) {
+// route to return all sensors with latest data (GET http://localhost:3000/sensors)
+router.get('/', function(req, res) {
     Reading.aggregate(
         [
             {$sort: {'timestamp': -1}},
