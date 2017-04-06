@@ -28,12 +28,17 @@ router.get('/', function(req, res) {
     );
 });
 
-// find sensor types by uuid
+// find sensor types & latest reading by uuid
 router.get('/types', function(req, res) {
     Reading.aggregate(
         [
             { $match: { 'uuid': req.query.uuid } },
-            { $group: { '_id': '$type' } }
+            {
+                $group: {
+                    '_id': '$type',
+                    'reading': { '$last': '$reading' }
+                }
+            }
         ],
         function (err, data) {
             res.json({

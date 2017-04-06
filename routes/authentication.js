@@ -15,7 +15,7 @@ router.post('/authenticate', function(req, res) {
 
         if (err) throw err;
 
-        if (!user || (user.password != req.body.password)) {
+        if (!user || (user.password !== req.body.password)) {
             res.status(403).json({
                 status: 'error',
                 message: 'Authentication failed; invalid credentials.'
