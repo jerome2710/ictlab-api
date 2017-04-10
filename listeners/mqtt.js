@@ -1,7 +1,7 @@
-// listeners/mqtt.js
-var Reading = require('./../models/reading');
+"use strict";
 
-module.exports = function(client) {
+// listeners/mqtt.js
+module.exports = function(client, influx) {
 
     // when connected - listen to the sensors
     client.on('connect', function() {
@@ -13,18 +13,25 @@ module.exports = function(client) {
 
         message = JSON.parse(message);
 
-        for (var index = 0; index < message.readings.length; ++index) {
-            var reading = new Reading({
-                uuid: message.uuid,
-                location: message.location,
-                type: message.readings[index].type,
-                reading: message.readings[index].reading,
-                unit: message.readings[index].unit,
-                timestamp: message.readings[index].timestamp,
-                battery: message.battery
-            });
-            reading.save(function (err) {
-                if (err) throw err;
+        for (let index = 0; index < message.readings.length; ++index) {
+
+            influx.writePoints([
+                {
+                    measurement: 'readings',
+                    tags: {
+                        'uuid': message.uuid,
+                        'location': message.location,
+                        'type': message.readings[index].type
+                    },
+                    fields: {
+                        reading: message.readings[index].reading,
+                        unit: message.readings[index].unit,
+                        battery: message.battery
+                    },
+                    timestamp: new Date(message.readings[index].timestamp * 1000)
+                }
+            ]).catch(err => {
+                console.error(`Error saving data to InfluxDB! ${err.stack}`)
             });
         }
 

@@ -1,35 +1,62 @@
+"use strict";
+
+/**
+ * Config file
+ */
+const config = require('./config');
+
+/**
+ * Requires
+ */
+const Influx        = require('influx');
+const mqtt          = require('mqtt');
+const express       = require('express');
+const app           = express();
+const bodyParser    = require('body-parser');
+const morgan        = require('morgan');
+const mongoose      = require('mongoose');
+
+/**
+ * Models
+ */
+const readingModel = require('./models/reading');
+
+/**
+ * Influx setup
+ */
+const influx = new Influx.InfluxDB({
+    host:       config.influxdb.host,
+    port:       config.influxdb.port,
+    username:   config.influxdb.username,
+    password:   config.influxdb.password,
+    database:   config.influxdb.database,
+    schema:     readingModel
+});
+
 /**
  * MQTT Listener
  */
-var config = require('./config');
-var mqtt = require('mqtt');
-var clientOptions = {
-    port: config.mqtt.port,
-    clientId: 'mqttjs_' + Math.random().toString(16).substr(2, 8),
-    username: config.mqtt.username,
-    password: config.mqtt.password
-};
-var mqttClient = mqtt.connect('wss://mqtt.chibb-box.nl', clientOptions);
-require('./listeners/mqtt')(mqttClient);
+const mqttClient = mqtt.connect(config.mqtt.host, {
+    port:       config.mqtt.port,
+    clientId:   'mqttjs_' + Math.random().toString(16).substr(2, 8),
+    username:   config.mqtt.username,
+    password:   config.mqtt.password
+});
+require('./listeners/mqtt')(mqttClient, influx);
+
 
 /**
  * API
  */
-var express     = require('express');
-var app         = express();
-var bodyParser  = require('body-parser');
-var morgan      = require('morgan');
-var mongoose    = require('mongoose');
-
-var debugRoutes     = require('./routes/debug');
-var authRoutes      = require('./routes/authentication');
-var sensorRoutes    = require('./routes/sensors');
-var readingRoutes   = require('./routes/readings');
+const debugRoutes     = require('./routes/debug');
+const authRoutes      = require('./routes/authentication');
+const sensorRoutes    = require('./routes/sensors')(influx);
+const readingRoutes   = require('./routes/readings')(influx);
 
 // ==============================================
 // configuration ================================
 // ==============================================
-var port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 mongoose.connect(config.mongodb.database);
 
 app.use(bodyParser.urlencoded({ extended: false }));

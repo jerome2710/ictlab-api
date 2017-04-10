@@ -1,15 +1,26 @@
+"use strict";
+
 // models/reading.js
-var mongoose = require('mongoose');
+const Influx = require('influx');
 
-var ReadingSchema = mongoose.Schema({
-    uuid: String,
-    location: String,
-    type: String,
-    reading: Number,
-    unit: String,
-    timestamp: Number,
-    battery: Number
-});
+const schema = [
+    {
+        measurement: 'readings',
+        fields: {
+            uuid: Influx.FieldType.STRING,
+            location: Influx.FieldType.STRING,
+            type: Influx.FieldType.STRING,
+            reading: Influx.FieldType.FLOAT,
+            unit: Influx.FieldType.STRING,
+            battery: Influx.FieldType.FLOAT
+        },
+        tags: [
+            'uuid',
+            'location',
+            'type'
+        ]
+    }
+];
 
-// Export the Mongoose model
-module.exports = mongoose.model('Reading', ReadingSchema);
+// Export the model
+module.exports = schema;

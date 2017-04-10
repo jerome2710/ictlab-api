@@ -1,9 +1,11 @@
+"use strict";
+
 // routes/api.js
-var config      = require('./../config');
-var express     = require('express');
-var router      = express.Router();
-var jwt         = require('jsonwebtoken');
-var User        = require('./../models/user');
+const config      = require('./../config');
+const express     = require('express');
+const router      = express.Router();
+const jwt         = require('jsonwebtoken');
+const User        = require('./../models/user');
 
 // route to authenticate a user (POST http://localhost:3000/api/authenticate)
 router.post('/authenticate', function(req, res) {
@@ -23,7 +25,7 @@ router.post('/authenticate', function(req, res) {
         } else if (user) {
 
             // create a token
-            var token = jwt.sign(user, config.secret, {
+            let token = jwt.sign(user, config.secret, {
                 expiresIn: 3600 // expires in a hour
             });
 
@@ -41,7 +43,7 @@ router.post('/authenticate', function(req, res) {
 router.use(function(req, res, next) {
 
     // check header or url parameters or post parameters for token
-    var token = req.body.token || req.query.token || req.headers['x-access-token'];
+    let token = req.body.token || req.query.token || req.headers['x-access-token'];
 
     // decode token
     if (token) {
