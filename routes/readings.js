@@ -3,64 +3,55 @@
 // routes/sensors.js
 const express     = require('express');
 const router      = express.Router();
-const Reading     = require('./../models/reading');
 
 module.exports = function(influx) {
 
     /**
-     * Route to return all latest readings (GET http://localhost:3000/readings)
+     * Route to return readings by the given params (GET http://localhost:3000/readings)
      */
     router.get('/', function(req, res) {
-        res.json({
-            status: 'work-in-progress',
-            data: {}
+
+        let dateFrom = new Date(req.query.dateFrom * 1000).toISOString(),
+            dateTo = new Date(req.query.dateTo * 1000).toISOString(),
+            interval = req.query.interval,
+            uuid = req.query.uuid,
+            type = req.query.type;
+
+        switch (interval) {
+            case 'weekly':
+                interval = '7d';
+                break;
+            case 'daily':
+                interval = '1d';
+                break;
+            case 'hourly':
+                interval = '1h';
+                break;
+            default:
+                interval = '1d';
+        }
+
+        let query = "SELECT MEAN(reading) FROM readings WHERE " +
+            "uuid = '" + uuid + "' AND " +
+            "type = '" + type + "' AND " +
+            "time >= '" + dateFrom + "' AND " +
+            "time <= '" + dateTo + "' " +
+            "GROUP BY time(" + interval + ")";
+
+        influx.query(query).then(result => {
+            res.json({
+                status: 'success',
+                data: {
+                    readings: result
+                }
+            });
+        }).catch(err => {
+            res.status(500).send({
+                status: 'error',
+                message: err.stack
+            });
         });
     });
-
-    /**
-     * Route to return readings for specific sensor (GET http://localhost:3000/readings/:uuid)
-     */
-    router.get('/:uuid', function(req, res) {
-
-        // filter values
-        let timestampFrom = parseInt((req.query.timestampFrom || Date.now()) || 0);
-        let timestampTo = parseInt((req.query.timestampTo || Date.now()) || 0);
-        let type = req.query.type || null;
-        let location = req.query.location || null;
-
-        // build filter
-        let filter = [
-            { 'uuid': req.params.uuid },
-            { 'timestamp': { $gte: timestampFrom, $lte: timestampTo } }
-        ];
-
-        // add optionals
-        if (type) {
-            filter.push({ 'type': type });
-        }
-
-        if (location) {
-            filter.push({ 'location': location });
-        }
-
-        // build query & return results
-        Reading.find(
-            { $and : filter },
-            function (err, data) {
-                res.json({
-                    status: 'success',
-                    data: {
-                        filters: {
-                            timestampFrom: timestampFrom,
-                            timestampTo: timestampTo
-                        },
-                        readings: (data || [])
-                    }
-                });
-            }
-        ).sort({ 'timestamp': 1 });
-    });
-
 
     return router;
 };
