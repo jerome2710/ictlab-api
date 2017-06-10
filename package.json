@@ -1,0 +1,32 @@
+{
+  "name": "ictlab-api",
+  "version": "1.0.0",
+  "description": "ICT-Lab API for processing data from the MQTT-broker into the MongoDB database",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://jerome2710@github.com/jerome2710/ictlab-api.git"
+  },
+  "author": "Jerome Anker",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jerome2710/ictlab-api/issues"
+  },
+  "homepage": "https://github.com/jerome2710/ictlab-api#readme",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "influx": "^5.0.6",
+    "jsonwebtoken": "^7.3.0",
+    "mongoose": "^4.8.6",
+    "morgan": "^1.8.1",
+    "mqtt": "^2.4.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}
